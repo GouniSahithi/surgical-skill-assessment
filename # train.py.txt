@@ -1,0 +1,250 @@
+# #####################################train.py
+import torch
+import torch.nn as nn
+import torch.optim as optim
+from torch.utils.data import DataLoader, TensorDataset, random_split
+from tqdm import tqdm
+from model_gcn_lstm import GCN_LSTM
+from data_loader import load_jigsaws_data
+
+# ==============================================================
+# 1️⃣ CONFIGURATION
+# ==============================================================
+device = torch.device("cpu")  # Force CPU
+data_path = r"C:\Users\sahithi\Desktop\surgical-skill-assessment\data\JIGSAWS"
+num_epochs = 10
+batch_size = 16
+learning_rate = 0.001
+
+print(f"✅ Using device: {device}")
+
+# ==============================================================
+# 2️⃣ LOAD REAL DATA
+# ==============================================================
+X, y = load_jigsaws_data(data_path)
+print(f"📥 Loaded dataset: X={X.shape}, y={y.shape}")
+
+dataset = TensorDataset(X, y)
+
+# Split into train/test sets
+train_size = int(0.8 * len(dataset))
+test_size = len(dataset) - train_size
+train_dataset, test_dataset = random_split(dataset, [train_size, test_size])
+
+train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+test_loader = DataLoader(test_dataset, batch_size=batch_size)
+
+# ==============================================================
+# 3️⃣ DEFINE MODEL
+# ==============================================================
+# Input size = number of kinematic features per sample
+input_dim = 76
+hidden_dim = 128
+num_classes = 3  # Novice, Intermediate, Expert
+
+model = GCN_LSTM(input_dim=input_dim, hidden_dim=hidden_dim, num_classes=num_classes).to(device)
+
+criterion = nn.CrossEntropyLoss()
+optimizer = optim.Adam(model.parameters(), lr=learning_rate)
+
+# ==============================================================
+# 4️⃣ TRAINING LOOP
+# ==============================================================
+for epoch in range(num_epochs):
+    model.train()
+    running_loss = 0.0
+    correct = 0
+    total = 0
+
+    for inputs, labels in tqdm(train_loader, desc=f"Epoch {epoch+1}/{num_epochs}"):
+        inputs, labels = inputs.to(device), labels.to(device)
+
+        optimizer.zero_grad()
+        outputs = model(inputs)
+        loss = criterion(outputs, labels)
+        loss.backward()
+        optimizer.step()
+
+        running_loss += loss.item() * inputs.size(0)
+
+        _, predicted = torch.max(outputs, 1)
+        total += labels.size(0)
+        correct += (predicted == labels).sum().item()
+
+    epoch_loss = running_loss / len(train_loader.dataset)
+    epoch_acc = 100 * correct / total
+
+    print(f"✅ Epoch [{epoch+1}/{num_epochs}] | Loss: {epoch_loss:.4f} | Accuracy: {epoch_acc:.2f}%")
+
+# ==============================================================
+# 5️⃣ TESTING PHASE
+# ==============================================================
+model.eval()
+correct = 0
+total = 0
+with torch.no_grad():
+    for inputs, labels in test_loader:
+        inputs, labels = inputs.to(device), labels.to(device)
+        outputs = model(inputs)
+        _, predicted = torch.max(outputs, 1)
+        total += labels.size(0)
+        correct += (predicted == labels).sum().item()
+
+test_acc = 100 * correct / total
+print(f"🎯 Final Test Accuracy: {test_acc:.2f}%")
+
+# ==============================================================
+# 6️⃣ SAVE MODEL
+# ==============================================================
+torch.save(model.state_dict(), "../results/gcn_lstm_model.pth")
+print("💾 Model saved successfully!")
+
+
+
+
+
+
+###########################################dataloder
+import os
+import numpy as np
+import torch
+from sklearn.preprocessing import StandardScaler
+
+# Skill levels based on JIGSAWS documentation
+# B, G, H, I → Novice | C, F → Intermediate | D, E → Expert
+SKILL_MAP = {
+    "B": 0,  # Novice
+    "G": 0,
+    "H": 0,
+    "I": 0,
+    "C": 1,  # Intermediate
+    "F": 1,
+    "D": 2,  # Expert
+    "E": 2
+}
+
+def load_kinematic_file(file_path):
+    """Load one kinematic data file"""
+    try:
+        data = np.loadtxt(file_path)
+        if data.ndim == 1:  # Sometimes only one row
+            data = data[np.newaxis, :]
+        return data
+    except Exception as e:
+        print(f"⚠️ Error reading {file_path}: {e}")
+        return None
+
+
+def load_jigsaws_data(root_dir):
+    """
+    Loads all kinematic data from the JIGSAWS dataset.
+    root_dir should point to the folder containing Suturing, Knot_Tying, Needle_Passing
+    """
+    all_features = []
+    all_labels = []
+
+    scaler = StandardScaler()
+
+    # Iterate over tasks
+    for task_name in ["Suturing", "Knot_Tying", "Needle_Passing"]:
+        task_path = os.path.join(root_dir, task_name, "Kinematic_data")
+        if not os.path.exists(task_path):
+            print(f"⚠️ Missing folder: {task_path}")
+            continue
+
+        # List all .txt files
+        for file in os.listdir(task_path):
+            if not file.endswith(".txt"):
+                continue
+
+            subject_id = file.split("_")[1][0]  # Example: Suturing_B001_000
+            if subject_id not in SKILL_MAP:
+                continue
+
+            file_path = os.path.join(task_path, file)
+            data = load_kinematic_file(file_path)
+            if data is None:
+                continue
+
+            # Optional: downsample to reduce computation
+            if len(data) > 300:
+                data = data[::3]  # Take every 3rd frame
+
+            # Flatten time series to vector for now
+            flat = data.flatten()
+            all_features.append(flat)
+            all_labels.append(SKILL_MAP[subject_id])
+
+    # Pad sequences to same length
+    max_len = max(len(x) for x in all_features)
+    features_padded = np.zeros((len(all_features), max_len))
+    for i, seq in enumerate(all_features):
+        features_padded[i, :len(seq)] = seq
+
+    # Normalize
+    features_scaled = scaler.fit_transform(features_padded)
+
+    # Convert to tensors
+    X = torch.tensor(features_scaled, dtype=torch.float32)
+    y = torch.tensor(all_labels, dtype=torch.long)
+
+    print(f"✅ Loaded {len(X)} samples from {root_dir}")
+    return X, y
+
+
+
+
+
+
+
+###########################model_fcn_lstm
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+# ---------------- Graph Convolution Layer (basic) ----------------
+class GraphConvolution(nn.Module):
+    def __init__(self, in_features, out_features):
+        super(GraphConvolution, self).__init__()
+        self.fc = nn.Linear(in_features, out_features)
+
+    def forward(self, x):
+        # x: [batch, time, in_features]
+        out = self.fc(x)
+        return out
+
+
+# ---------------- GCN + LSTM Model ----------------
+class GCN_LSTM(nn.Module):
+    def __init__(self, input_dim=76, hidden_dim=128, num_classes=3):
+        super(GCN_LSTM, self).__init__()
+
+        # Two lightweight GCN-like fully connected layers
+        self.gcn1 = GraphConvolution(input_dim, 128)
+        self.gcn2 = GraphConvolution(128, 64)
+
+        # LSTM layer for temporal sequence modeling
+        self.lstm = nn.LSTM(input_size=64, hidden_size=hidden_dim, batch_first=True)
+
+        # Fully connected output layer
+        self.fc = nn.Linear(hidden_dim, num_classes)
+
+    def forward(self, x):
+        # x: [batch, features_flattened]
+        if x.dim() == 2:
+            feature_dim = 76
+            time_steps = x.shape[1] // feature_dim
+            x = x.view(x.shape[0], time_steps, feature_dim)
+            print(f"🔍 Reshaped Input: {x.shape}")
+
+        # Apply GCN layers (feature-wise)
+        x = F.relu(self.gcn1(x))  # [batch, time, 128]
+        x = F.relu(self.gcn2(x))  # [batch, time, 64]
+
+        # Apply LSTM (temporal modeling)
+        lstm_out, _ = self.lstm(x)  # [batch, time, hidden_dim]
+
+        # Classification based on last timestep output
+        out = self.fc(lstm_out[:, -1, :])  # [batch, num_classes]
+        return out
+

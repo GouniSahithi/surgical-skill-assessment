@@ -1,0 +1,67 @@
+/* ---------- BACKGROUND VIDEO (FULL VISIBILITY) ---------- */
+.video-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+  opacity: 1 !important;   /* FULLY VISIBLE */
+}
+
+/* ---------- SOFT DARK OVERLAY FOR READABILITY ---------- */
+.overlay-dark {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.45);  /* just enough to make text readable */
+  z-index: -1;
+}
+
+/* ---------- MAIN PAGE ---------- */
+.App {
+  text-align: center;
+  padding: 40px;
+  color: #fff;
+}
+
+/* Header title */
+h1 {
+  font-size: 48px;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+/* Subtitle / instructions */
+h2 {
+  font-size: 28px;
+  font-weight: 400;
+  margin-bottom: 20px;
+}
+
+/* Upload section */
+.upload-section {
+  margin-top: 20px;
+}
+
+/* ---------- RESULT CARD (GLASSMORPHISM) ---------- */
+.result-card {
+  margin: 40px auto;
+  max-width: 700px;
+  padding: 35px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #fff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.result-card p,
+.result-card h3 {
+  font-size: 22px;
+  margin: 10px 0;
+}

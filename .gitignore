@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual env
+venv/
+.env/
+
+# Large data & outputs
+uploads/
+checkpoints/
+data/JIGSAWS/
+
+# OS files
+.DS_Store
+Thumbs.db
