@@ -1,14 +1,9 @@
-# Models & results
+# Models
 *.pth
 results/
-checkpoints/
 
-# Videos & media
+# Videos
 *.mp4
 
 # Dataset
 data/JIGSAWS/
-
-# PDFs & presentations (optional)
-*.pdf
-*.pptx
