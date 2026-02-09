@@ -1,18 +1,14 @@
-# Python
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-
-# Virtual env
-venv/
-.env/
-
-# Large data & outputs
-uploads/
+# Models & results
+*.pth
+results/
 checkpoints/
+
+# Videos & media
+*.mp4
+
+# Dataset
 data/JIGSAWS/
 
-# OS files
-.DS_Store
-Thumbs.db
+# PDFs & presentations (optional)
+*.pdf
+*.pptx
