@@ -1,6 +1,6 @@
- Surgical Skill Assessment using GCN-LSTM
+**Surgical Skill Assessment using GCN-LSTM-**
 
-Project Overview:
+**Project Overview:**
 
 This project implements a machine learning–based surgical skill assessment system using graph-based deep learning techniques.
 It analyzes laparoscopic surgical task data and predicts the skill level of a surgeon based on motion patterns and kinematic features.
@@ -9,7 +9,7 @@ The system leverages a Graph Convolutional Network (GCN) to model spatial relati
 
 The project is designed for applications in medical training, surgical education, and skill evaluation.
 
-Features:
+**Features:**
 
 Surgical Skill Prediction: Classifies surgical performance into skill levels
 
@@ -23,7 +23,7 @@ Web Interface: Upload videos and receive predictions via UI
 
 Confidence Scores: Displays prediction confidence for each skill level
 
-Model Architecture:
+**Model Architecture:**
 
 Graph Convolutional Network (GCN)
 
@@ -37,25 +37,25 @@ Softmax Output Layer
 
 Produces probability distribution over skill levels
 
-Repository Structure:
+**Repository Structure:**
 surgical-skill-assessment/
 │
 ├── backend/                     # Flask backend
 │   ├── app.py
-│   ├── app_video.py
-│   ├── inference_utils.py
-│   ├── video_utils.py
+│   ├── app\_video.py
+│   ├── inference\_utils.py
+│   ├── video\_utils.py
 │   └── requirements.txt
 │
 ├── frontend/                    # Frontend UI
 │   ├── public/
 │   └── src/
 │
-├── src/                         # ML training & evaluation code
-│   ├── model_gcn_lstm.py
+├── src/                         # ML training \& evaluation code
+│   ├── model\_gcn\_lstm.py
 │   ├── train.py
 │   ├── evaluate.py
-│   ├── data_loader.py
+│   ├── data\_loader.py
 │   └── utils.py
 │
 ├── data/                        # Dataset directory (not included)
@@ -63,41 +63,43 @@ surgical-skill-assessment/
 ├── README.md
 └── .gitignore
 
-Dataset:
+**Dataset:**
 
 This project uses the JIGSAWS Surgical Skill Assessment Dataset.
 
- The dataset is not included in this repository due to size and licensing constraints.
+The dataset is not included in this repository due to size and licensing constraints.
 
 You can request access from the official source:
-🔗 http://cirl.lcsr.jhu.edu/research/hmm/datasets/jigsaws_release/
+🔗 http://cirl.lcsr.jhu.edu/research/hmm/datasets/jigsaws\_release/
 
- Setup Instructions
-🔹 Prerequisites
+**Setup Instructions**
+- Prerequisites
 
 Python 3.8 or higher
 
 Git
 
-🔹 Clone the Repository
+\- Clone the Repository
 git clone https://github.com/GouniSahithi/surgical-skill-assessment.git
 cd surgical-skill-assessment
 
-🔹 Setting Up a Virtual Environment (Recommended)
+\- Setting Up a Virtual Environment (Recommended)
 
-On Windows:
+**On Windows:**
 
 python -m venv venv
-venv\Scripts\activate
+venv\\Scripts\\activate
 
 
-On macOS / Linux:
+
+**On macOS / Linux:**
 
 python3 -m venv venv
 source venv/bin/activate
 
-🔹 Installing Dependencies
+-Installing Dependencies
 pip install -r backend/requirements.txt
+
 
 
 This installs required packages including:
@@ -112,10 +114,11 @@ OpenCV
 
 scikit-learn
 
-▶️ Running the Application
+--Running the Application
 Start the Backend Server
 cd backend
 python app.py
+
 
 
 If successful, you will see:
@@ -127,6 +130,7 @@ Access the Frontend
 Open your browser and go to:
 
 http://localhost:5000
+
 
 
 Upload a surgical video
@@ -150,9 +154,10 @@ Run:
 python src/train.py
 
 
-⚠️ GPU training is recommended (Google Colab preferred) for faster convergence.
 
-🛑 Notes
+GPU training is recommended (Google Colab preferred) for faster convergence.
+
+&nbsp;Notes
 
 Large files (datasets, videos, model weights) are excluded using .gitignore
 
@@ -160,13 +165,13 @@ Training on CPU may be slow
 
 Predictions depend on sufficient training epochs and balanced data
 
-👩‍💻 Author
+&nbsp;**Author:**
 
 Sahithi Gouni
 Computer Science Engineering Student
 Interests: AI/ML, Computer Vision, Healthcare AI
 
-🔮 Future Enhancements
+**Future Enhancements:**
 
 Improve skill classification accuracy
 
@@ -177,3 +182,4 @@ Deploy full application on cloud
 Add explainability and visual feedback
 
 Integrate surgeon performance analytics
+
