@@ -1,122 +1,214 @@
-**Surgical Skill Assessment using GCN-LSTM-**
+# **Surgical Skill Assessment**
 
-**Project Overview:**
 
-This project implements a machine learning–based surgical skill assessment system using graph-based deep learning techniques.
-It analyzes laparoscopic surgical task data and predicts the skill level of a surgeon based on motion patterns and kinematic features.
 
-The system leverages a Graph Convolutional Network (GCN) to model spatial relationships between surgical tool features and an LSTM network to capture temporal dynamics. A Flask-based backend handles inference, while a frontend interface enables users to upload surgical videos and view predictions.
+Project Type: Machine Learning | Healthcare AI
 
-The project is designed for applications in medical training, surgical education, and skill evaluation.
+Domain: Surgical Skill Evaluation, Computer Vision, Graph Neural Networks.
 
-**Features:**
 
-Surgical Skill Prediction: Classifies surgical performance into skill levels
 
-Graph-Based Learning: Uses GCN to model relationships between tool features
+### 1\. Project Overview
 
-Temporal Modeling: LSTM captures time-dependent motion patterns
 
-Video/Kinematic Data Support: Processes laparoscopic task data
 
-Web Interface: Upload videos and receive predictions via UI
+* This project implements a Surgical Skill Assessment system using deep learning techniques to evaluate a surgeon’s skill level from laparoscopic task data.
+* The system leverages Graph Convolutional Networks (GCN) to capture spatial relationships between surgical tool features and Long Short-Term Memory (LSTM) networks to model temporal motion patterns.
 
-Confidence Scores: Displays prediction confidence for each skill level
 
-**Model Architecture:**
 
-Graph Convolutional Network (GCN)
+* A Flask-based backend handles inference, while a web-based frontend allows users to upload surgical videos and receive skill predictions with confidence scores.
 
-Captures spatial dependencies among kinematic features
 
-Long Short-Term Memory (LSTM)
 
-Models temporal evolution of surgical motion
+* This project is designed to support medical training, surgical education, and objective skill evaluation.
 
-Softmax Output Layer
 
-Produces probability distribution over skill levels
 
-**Repository Structure:**
+### 2\. Features
+
+
+
+* Surgical Skill Prediction: Classifies surgeon performance into skill levels
+
+
+
+* Graph-Based Learning: Uses GCN to model relationships between tool kinematics
+
+
+
+* Temporal Analysis: LSTM captures time-dependent motion patterns
+
+
+
+* Video Upload Support: Accepts laparoscopic surgical videos
+
+
+
+* Confidence Scores: Displays prediction confidence for each skill class
+
+
+
+* Web Interface: Simple and user-friendly frontend
+
+
+
+### 3\. Model Architecture
+
+
+
+* Graph Convolutional Network (GCN): Models spatial dependencies among surgical tool features
+
+
+
+* Long Short-Term Memory (LSTM): Captures temporal dynamics of surgical motion
+
+
+
+* Softmax Classifier: Outputs probability distribution over skill levels
+
+
+
+### 4\. Repository Structure
+
+
+
 surgical-skill-assessment/
+
 │
+
 ├── backend/                     # Flask backend
-│   ├── app.py
-│   ├── app\_video.py
-│   ├── inference\_utils.py
-│   ├── video\_utils.py
-│   └── requirements.txt
+
+│   ├── app.py                   # Main backend server
+
+│   ├── app\_video.py             # Video-based inference
+
+│   ├── inference\_utils.py       # Prediction utilities
+
+│   ├── video\_utils.py           # Video preprocessing
+
+│   └── requirements.txt         # Backend dependencies
+
 │
+
 ├── frontend/                    # Frontend UI
+
 │   ├── public/
+
 │   └── src/
+
 │
-├── src/                         # ML training \& evaluation code
-│   ├── model\_gcn\_lstm.py
-│   ├── train.py
-│   ├── evaluate.py
-│   ├── data\_loader.py
-│   └── utils.py
+
+├── src/                         # ML training \& evaluation
+
+│   ├── model\_gcn\_lstm.py        # GCN-LSTM model
+
+│   ├── train.py                 # Training script
+
+│   ├── evaluate.py              # Evaluation script
+
+│   ├── data\_loader.py           # Data loading utilities
+
+│   └── utils.py                 # Helper functions
+
 │
+
 ├── data/                        # Dataset directory (not included)
-├── results/                     # Trained models (ignored in Git)
-├── README.md
+
+├── results/                     # Model outputs (ignored in Git)
+
+├── README.md                    # Project documentation
+
 └── .gitignore
 
-**Dataset:**
+
+
+### 5.Dataset
+
+
 
 This project uses the JIGSAWS Surgical Skill Assessment Dataset.
 
-The dataset is not included in this repository due to size and licensing constraints.
 
-You can request access from the official source:
+
+1. The dataset is not included in this repository due to size and license restrictions.
+
+
+
+Dataset source:
+
 🔗 http://cirl.lcsr.jhu.edu/research/hmm/datasets/jigsaws\_release/
 
-**Setup Instructions**
-- Prerequisites
 
-Python 3.8 or higher
 
-Git
+### 6.Setup Instructions
 
-\- Clone the Repository
+
+
+1. Prerequisites
+
+
+
+* Python 3.8 or higher
+
+
+
+* Git
+
+
+
+2\.	Clone the Repository
+
+
+
 git clone https://github.com/GouniSahithi/surgical-skill-assessment.git
+
 cd surgical-skill-assessment
 
-\- Setting Up a Virtual Environment (Recommended)
 
-**On Windows:**
+
+3\.	Create a Virtual Environment
+
+
+
+Windows:
+
+
 
 python -m venv venv
+
 venv\\Scripts\\activate
 
 
 
-**On macOS / Linux:**
+macOS / Linux:
+
+
 
 python3 -m venv venv
+
 source venv/bin/activate
 
--Installing Dependencies
+
+
+4\.	Install Dependencies
+
+
+
 pip install -r backend/requirements.txt
 
 
 
-This installs required packages including:
+### 7.Running the Application
 
-Flask
 
-PyTorch
 
-NumPy
+1. Start Backend Server:
 
-OpenCV
 
-scikit-learn
 
---Running the Application
-Start the Backend Server
 cd backend
+
 python app.py
 
 
@@ -125,61 +217,113 @@ If successful, you will see:
 
 { "message": "Surgical Skill Assessment API is running!" }
 
-Access the Frontend
 
-Open your browser and go to:
 
-http://localhost:5000
+2\.	 Access the Frontend
 
 
 
-Upload a surgical video
+* Open a browser and navigate to:
 
-Select task type
 
-Click Predict
 
-View predicted skill level and confidence score
+* http://localhost:5000
 
-📈 Model Training
+
+
+* Upload a surgical video
+
+
+
+* Select the task
+
+
+
+* Click Predict
+
+
+
+* View predicted skill level and confidence score
+
+
+
+### 8.Model Training
+
+
 
 To train the model from scratch:
 
-Place the JIGSAWS dataset in the data/ directory
 
-Configure paths in src/train.py
 
-Run:
-
-python src/train.py
+* Place the JIGSAWS dataset inside the data/ directory
 
 
 
-GPU training is recommended (Google Colab preferred) for faster convergence.
+* Configure dataset paths in src/train.py
 
-&nbsp;Notes
 
-Large files (datasets, videos, model weights) are excluded using .gitignore
 
-Training on CPU may be slow
+* Run the training script:
 
-Predictions depend on sufficient training epochs and balanced data
 
-&nbsp;**Author:**
 
-Sahithi Gouni
-Computer Science Engineering Student
-Interests: AI/ML, Computer Vision, Healthcare AI
+&nbsp;           .python src/train.py
 
-**Future Enhancements:**
 
-Improve skill classification accuracy
 
-Add real-time video inference
 
-Deploy full application on cloud
 
-Add explainability and visual feedback
+\*\*GPU training (Google Colab) is recommended for faster convergence.
 
-Integrate surgeon performance analytics
+
+
+### 9.Notes
+
+
+
+* Large files (datasets, videos, trained models) are excluded using .gitignore
+
+
+
+* Training on CPU may be slow
+
+
+
+* Model performance improves with sufficient training epochs and balanced data
+
+
+
+### 10.Author
+
+
+
+1. Sahithi Gouni
+   
+2. Computer Science Engineering Student
+   
+3. Interests: AI/ML, Computer Vision, Healthcare AI
+
+
+
+### 11.Future Enhancements
+
+
+
+* Improve skill classification accuracy
+
+
+
+* Add real-time video inference
+
+
+
+* Deploy full-stack application on cloud
+
+
+
+* Add explainability and performance analytics
+
+
+
+
 
